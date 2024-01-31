@@ -1,69 +1,64 @@
 
 // MAIN PAGE
 
-// Au clic du bouton "Search"
+// SEARCH BUTTON ACTION
 document.querySelector('.search-btn').addEventListener('click',
     function () {
         let departureSearch = document.querySelector('#departure').value
         let arrivalSearch = document.querySelector('#arrival').value
         let dateSearch = document.querySelector('#calendar').value
 
-        // Si les champs sont vides
         if (!departureSearch || !arrivalSearch || !dateSearch) {
             document.querySelector('#card-booking').innerHTML =
                 `<img src="./images/notfound.png" id='notfound' alt="notfound-picture">
                 <p class="phrase">Missing field</p>
             `
         } else {
-            fetch(/* 'http://localhost:3000/trips/search' */
-            `http://localhost:3000/trips?departure=${departureSearch}&arrival=${arrivalSearch}&date=${dateSearch}`/* , {
+            fetch(`http://localhost:3000/trips?departure=${departureSearch}&arrival=${arrivalSearch}&date=${dateSearch}`,/* {
                 
-                method: 'GET',
+                method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ departure, arrival}),
+                body: JSON.stringify({ departure : departureSearch, arrival : arrivalSearch, date : dateSearch}),
 
             } */).then(response => response.json())
-            .then((data) => {
-                console.log(data);
-                if (data.trip) {
-                    for (let i = 0; i < data.trip.length; i++) {
-                        document.querySelector('#card-booking').innerHTML =
-                            `<div class="travelsList" id=${data.trip[i]._id}>
-                                <div class="travel">${data.trip[i].departure} > ${data.trip[i].arrival}</div>
-                                <div class="travel-time">${data.trip[i].time}</div>
-                                <div class="travel-price">${data.trip[i].price}</div>
-                                <button id="book-btn" type='button'>Book</button>
+                .then((data) => {
+                    if (data) {
+                        console.log(data)
+                        for (let i = 0; i < data.trips.length; i++) {
+                            const hour = String(
+                                new Date(data.trips[i].date).getHours()
+                            ).padStart(2, "0");
+                            const minute = String(
+                                new Date(data.trips[i].date).getMinutes()
+                            ).padStart(2, "0");
+                            document.querySelector('#card-booking').innerHTML +=
+                                `<div class="travelsList" id=${data.trips[i]._id}>
+                                <div class="travel">${data.trips[i].departure} > ${data.trips[i].arrival}</div>
+                                <div class="travel-time">${hour} : ${minute}</div>
+                                <div class="travel-price">${data.trips[i].price}€</div>
+                                <button class="book-btn" type='button' value=${data.trips[i]._id}>Book</button>
                             </div>
                             `
-                         bookTravel()
+                            /* bookTravel() */
+                            let bookBtn = document.querySelectorAll(".book-btn")
+                            for (let i = 0; i < bookBtn.length; i++) {
+                                bookBtn[i].addEventListener('click',
+                                    function () {
+                                        fetch(`http://localhost:3000/cart`,{
+                                                    method: 'POST',
+                                                    headers: { 'Content-Type': 'application/json' },
+                                                    body : JSON.stringify({id : bookBtn[i].value})
+                                                  })
+                                                  .then((response) => response.json())
+                                                  .then(window.location.assign('cart.html'))
+                                    }
+                                )
+                            };
                         }
-                        window.location.assign('cart.html')
                     }
                 })
         }
     })
 
 
-
-function bookTravel() {
-    for (let i = 0; i < document.querySelectorAll('.travelsList').length; i++) {
-        document.querySelectorAll('.book-btn')[i].addEventListener('click',
-            function () {
-                window.location.assign('cart.html')
-                /* document.querySelector('.text').innerHTML =
-                    `<div class="travelsList" id=${data.trips[i]._id}>
-                        <div class="travel">${data.trips[i].departure} > ${data.trips[i].arrival}</div>
-                        <div class="travel-time">${data.trips[i].time}</div>
-                        <div class="travel-price">${data.trips[i].price}</div>
-                        <button class="delete-btn" type='button'>X</button>
-                    </div>`
-                    deleteTravel() */
-
-            })
-    }
-}
-bookTravel()
-
-
-
-
+            

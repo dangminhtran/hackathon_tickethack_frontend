@@ -1,4 +1,6 @@
 
+// MAIN PAGE
+
 // Au clic du bouton "Search"
 document.querySelector('#search-btn').addEventListener('click',
     function () {
@@ -10,44 +12,55 @@ document.querySelector('#search-btn').addEventListener('click',
         if (!departureSearch || !arrivalSearch || !dateSearch) {
             document.querySelector('#card-booking').innerHTML =
                 `<img src="./images/notfound.png" id='notfound' alt="notfound-picture">
-            <p class="phrase">Missing field</p>
+                <p class="phrase">Missing field</p>
             `
         } else {
-            fetch('http://localhost:3000/trips/search')
-                .then(response => response.json())
-                .then(data => {
-                    // Replace "results" by the good name of the data
-                    if (data.results) {
-                        for (let i = 0; i < data.results.length; i++) {
-                            // A TERMINER LA BOUCLE
+            fetch('http://localhost:3000/trips/search', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                /* body: JSON.stringify({ departure, arrival}), */
 
-                            document.querySelector('#card-booking').innerHTML =
-                                `<p class="phrase">${data.result}</p>
-            `
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.trip) {
+                    for (let i = 0; i < data.trip.length; i++) {
+                        document.querySelector('#card-booking').innerHTML =
+                            `<div class="travelsList" id=${data.trip[i]._id}>
+                                <div class="travel">${data.trip[i].departure} > ${data.trip[i].arrival}</div>
+                                <div class="travel-time">${data.trip[i].time}</div>
+                                <div class="travel-price">${data.trip[i].price}</div>
+                                <button id="book-btn" type='button'>Book</button>
+                            </div>
+
+                            //penser à mettre la fonction Book pour aller au Cart
+                            `
+                         bookTravel()
                         }
                     }
                 })
-
         }
     })
 
-/* fetch('http://localhost:3000/weather')
-    .then(response => response.json())
-    .then(data => {
-        if (data.weather) {
-            for (let i = 0; i < data.weather.length; i++) {
-                document.querySelector('#cityList').innerHTML += `
-				<div class="cityContainer">
-				<p class="name">${data.weather[i].cityName}</p>
-				<p class="description">${data.weather[i].description}</p>
-				<img class="weatherIcon" src="images/${data.weather[i].main}.png"/>
-				<div class="temperature">
-					<p class="tempMin">${data.weather[i].tempMin}°C</p>
-					<span>-</span>
-					<p class="tempMax">${data.weather[i].tempMax}°C</p>
-				</div>
-				<button class="deleteCity" id="${data.weather[i].cityName}">Delete</button>
-			</div>
-			`;
-            }
-            updateDeleteCityEventListener(); */
+function bookTravel() {
+    for (let i = 0; i < document.querySelectorAll('.travelsList').length; i++) {
+        document.querySelectorAll('.book-btn')[i].addEventListener('click',
+            function () {
+                window.location.assign('cart.html')
+                /* document.querySelector('.text').innerHTML =
+                    `<div class="travelsList" id=${data.trips[i]._id}>
+                        <div class="travel">${data.trips[i].departure} > ${data.trips[i].arrival}</div>
+                        <div class="travel-time">${data.trips[i].time}</div>
+                        <div class="travel-price">${data.trips[i].price}</div>
+                        <button class="delete-btn" type='button'>X</button>
+                    </div>`
+                    deleteTravel() */
+
+            })
+    }
+}
+bookTravel()
+
+
+
+

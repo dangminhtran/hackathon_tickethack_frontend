@@ -17,13 +17,27 @@
 
     </header>
 
+<div class="content">
 <div class="text">
-    <div class="start-box">
+    <div class="travelsList" id=${data.trips[i]._id}>
+        <div class="travel"> Paris > Marseille</div>
+        <div class="travel-time">13h40</div>
+        <div class="travel-price">130€</div>
+        <button class="delete-btn" type='button'>X</button>
+    </div>
+
+        <div class="travelsList" id=${data.trips[i]._id}>
+            <div class="travel"> Paris > Marseille</div>
+            <div class="travel-time">13h40</div>
+            <div class="travel-price">130€</div>
+            <button class="delete-btn" type='button'>X</button>
+    <!-- <div class="start-box">
         <p>No tickets in your cart</p>
         <p>Why not plan a trip ?</p>
-    </div>
+    </div> -->
+</div>
 </div>
 
-    <script src="script.js"></script>    
+    <script src="cartpage.js"></script>    
 </body>
 </html>

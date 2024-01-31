@@ -90,7 +90,7 @@ input {
     margin: 2px;
 }
 
-#search-btn {
+.search-btn {
     background-color: #50ac94;
     height: 40px;
     border: none;

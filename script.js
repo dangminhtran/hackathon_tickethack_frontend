@@ -2,7 +2,7 @@
 // MAIN PAGE
 
 // Au clic du bouton "Search"
-document.querySelector('#search-btn').addEventListener('click',
+document.querySelector('.search-btn').addEventListener('click',
     function () {
         let departureSearch = document.querySelector('#departure').value
         let arrivalSearch = document.querySelector('#arrival').value
@@ -15,14 +15,16 @@ document.querySelector('#search-btn').addEventListener('click',
                 <p class="phrase">Missing field</p>
             `
         } else {
-            fetch('http://localhost:3000/trips/search', {
+            fetch(/* 'http://localhost:3000/trips/search' */
+            `http://localhost:3000/trips?departure=${departureSearch}&arrival=${arrivalSearch}&date=${dateSearch}`/* , {
+                
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' },
-                /* body: JSON.stringify({ departure, arrival}), */
+                body: JSON.stringify({ departure, arrival}),
 
-            })
-            .then(response => response.json())
-            .then(data => {
+            } */).then(response => response.json())
+            .then((data) => {
+                console.log(data);
                 if (data.trip) {
                     for (let i = 0; i < data.trip.length; i++) {
                         document.querySelector('#card-booking').innerHTML =
@@ -32,15 +34,16 @@ document.querySelector('#search-btn').addEventListener('click',
                                 <div class="travel-price">${data.trip[i].price}</div>
                                 <button id="book-btn" type='button'>Book</button>
                             </div>
-
-                            //penser à mettre la fonction Book pour aller au Cart
                             `
                          bookTravel()
                         }
+                        window.location.assign('cart.html')
                     }
                 })
         }
     })
+
+
 
 function bookTravel() {
     for (let i = 0; i < document.querySelectorAll('.travelsList').length; i++) {

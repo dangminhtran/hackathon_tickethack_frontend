@@ -14,16 +14,10 @@ document.querySelector('.search-btn').addEventListener('click',
                 <p class="phrase">Missing field</p>
             `
         } else {
-            fetch(`http://localhost:3000/trips?departure=${departureSearch}&arrival=${arrivalSearch}&date=${dateSearch}`,/* {
-                
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ departure : departureSearch, arrival : arrivalSearch, date : dateSearch}),
-
-            } */).then(response => response.json())
+            fetch(`http://localhost:3000/trips?departure=${departureSearch}&arrival=${arrivalSearch}&date=${dateSearch}`).then(response => response.json())
                 .then((data) => {
-                    if (data) {
-                        console.log(data)
+                    console.log(data)
+                     if (data) {
                         for (let i = 0; i < data.trips.length; i++) {
                             const hour = String(
                                 new Date(data.trips[i].date).getHours()
@@ -55,10 +49,19 @@ document.querySelector('.search-btn').addEventListener('click',
                                 )
                             };
                         }
+                    } else {
+                            document.querySelector('#card-booking').innerHTML = 
+                            `
+                            <div id="card-booking">
+                            <img src="./images/notfound.png" id='notfound' alt="notfound-picture">
+                            <p class="phrase">No trip available</p>
+                            </div>
+                            `
+                        }
                     }
+                )}
                 })
-        }
-    })
+
 
 
             
